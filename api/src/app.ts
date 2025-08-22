@@ -1,11 +1,8 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import session from 'express-session';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import authRoutes from './routes/auth';
 import driveRoutes from './routes/drive';
-
-dotenv.config();
 
 const app = express();
 
@@ -29,7 +26,7 @@ app.use(
   })
 );
 
-app.get('/', (req: Request, res: Response) => {
+app.get('/', (req, res) => {
   res.send('Drive Slideshow API is running!');
 });
 

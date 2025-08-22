@@ -9,17 +9,19 @@ declare module 'express-session' {
   }
 }
 
-const oauth2Client = new google.auth.OAuth2(
-  process.env.GOOGLE_CLIENT_ID,
-  process.env.GOOGLE_CLIENT_SECRET,
-  `${process.env.API_BASE_URL}/auth/google/callback`
-);
-
 export const getOAuthClient = (): Auth.OAuth2Client => {
-  return oauth2Client;
+  // Create a new OAuth2 client for each request.
+  // This ensures that environment variables are loaded before the client is instantiated,
+  // fixing the "Missing client_id" error. It also prevents concurrency issues.
+  return new google.auth.OAuth2(
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_CLIENT_SECRET,
+    `${process.env.API_BASE_URL}/auth/google/callback`
+  );
 };
 
 export const getGoogleAuthUrl = (): string => {
+  const oauth2Client = getOAuthClient();
   const scopes = [
     'https://www.googleapis.com/auth/drive.readonly',
     'https://www.googleapis.com/auth/userinfo.profile',

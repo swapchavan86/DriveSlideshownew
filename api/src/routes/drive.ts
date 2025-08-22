@@ -1,13 +1,13 @@
-import { Router } from 'express';
+import { Router, RequestHandler } from 'express';
 import { getDriveClient, getFolders, getImagesFromFolders, getImageFile } from '../services/google';
 import { GaxiosError } from 'gaxios';
 
 const router = Router();
 
 // Middleware to check for session and accountId
-const checkAuth = (req, res, next) => {
+const checkAuth: RequestHandler = (req, res, next) => {
   const accountId = req.query.accountId as string;
-  if (!req.session.tokens || !accountId || !req.session.tokens[accountId]) {
+  if (!req.session?.tokens || !accountId || !req.session.tokens[accountId]) {
     return res.status(401).json({ error: 'Unauthorized: No session or account not connected.' });
   }
   next();
