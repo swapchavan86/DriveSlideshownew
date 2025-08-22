@@ -6,6 +6,7 @@ import Welcome from "@/components/Welcome";
 import DriveExplorer, { Folder } from "@/components/DriveExplorer";
 import SlideshowPlayer, { ImageFile, SlideshowEffect } from "@/components/SlideshowPlayer";
 import { Account } from './components/Sidebar';
+import { AlertCircle } from 'lucide-react';
 
 const App = () => {
     const [accounts, setAccounts] = useState<Account[]>([]);
@@ -19,6 +20,22 @@ const App = () => {
     const [musicEnabled, setMusicEnabled] = useState(true);
 
     const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
+    // Critical configuration check. If the .env file is missing, show an error.
+    if (!apiBaseUrl) {
+        return (
+            <div className="flex h-screen w-full items-center justify-center bg-background text-destructive p-8 text-center font-sans">
+                <div className="flex flex-col items-center gap-4">
+                    <AlertCircle className="h-12 w-12" />
+                    <h1 className="text-2xl font-bold">Configuration Error</h1>
+                    <p className="max-w-md">
+                        The <code className="bg-destructive/20 p-1 rounded-sm">VITE_API_BASE_URL</code> environment variable is not set. Please create a <code className="bg-destructive/20 p-1 rounded-sm">.env</code> file in the <code className="bg-destructive/20 p-1 rounded-sm">ui</code> directory and set this variable to your API's URL.
+                    </p>
+                    <p className="text-sm">Refer to the <code className="bg-destructive/20 p-1 rounded-sm">ui/.env.example</code> file for an example.</p>
+                </div>
+            </div>
+        );
+    }
 
     const fetchAccounts = async () => {
         try {

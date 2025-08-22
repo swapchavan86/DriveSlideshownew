@@ -12,7 +12,7 @@ declare module 'express-session' {
 const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
   process.env.GOOGLE_CLIENT_SECRET,
-  `${process.env.API_BASE_URL || `http://localhost:${process.env.API_PORT}`}/auth/google/callback`
+  `${process.env.API_BASE_URL}/auth/google/callback`
 );
 
 export const getOAuthClient = (): Auth.OAuth2Client => {

@@ -1,11 +1,11 @@
-import { Router, Request, Response, NextFunction, RequestHandler } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import { getDriveClient, getFolders, getImagesFromFolders, getImageFile } from '../services/google';
 import { GaxiosError } from 'gaxios';
 
 const router = Router();
 
 // Middleware to check for session and accountId
-const checkAuth: RequestHandler = (req, res, next) => {
+const checkAuth = (req: Request, res: Response, next: NextFunction) => {
   const accountId = req.query.accountId as string;
   if (!req.session.tokens || !accountId || !req.session.tokens[accountId]) {
     return res.status(401).json({ error: 'Unauthorized: No session or account not connected.' });
@@ -13,7 +13,7 @@ const checkAuth: RequestHandler = (req, res, next) => {
   next();
 };
 
-router.get('/folders', checkAuth, async (req, res) => {
+router.get('/folders', checkAuth, async (req: Request, res: Response) => {
   const accountId = req.query.accountId as string;
   try {
     const drive = getDriveClient(req.session, accountId);
@@ -25,7 +25,7 @@ router.get('/folders', checkAuth, async (req, res) => {
   }
 });
 
-router.get('/images', checkAuth, async (req, res) => {
+router.get('/images', checkAuth, async (req: Request, res: Response) => {
   const folderIds = req.query.folderIds as string;
   const accountId = req.query.accountId as string;
 
@@ -43,15 +43,19 @@ router.get('/images', checkAuth, async (req, res) => {
   }
 });
 
-router.get('/image/:fileId', checkAuth, async (req, res) => {
+router.get('/image/:fileId', checkAuth, async (req: Request, res: Response) => {
     const { fileId } = req.params;
     const accountId = req.query.accountId as string;
 
     try {
         const drive = getDriveClient(req.session, accountId);
         const { data, headers } = await getImageFile(drive, fileId);
-        res.setHeader('Content-Type', headers['content-type']);
-        res.setHeader('Content-Length', headers['content-length']);
+        if (headers['content-type']) {
+            res.setHeader('Content-Type', headers['content-type']);
+        }
+        if (headers['content-length']) {
+            res.setHeader('Content-Length', headers['content-length']);
+        }
         data.pipe(res);
     } catch (err) {
         const error = err as GaxiosError;
