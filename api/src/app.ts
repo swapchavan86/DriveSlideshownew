@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import session from 'express-session';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -29,7 +29,7 @@ app.use(
   })
 );
 
-app.get('/', (req, res) => {
+app.get('/', (req: Request, res: Response) => {
   res.send('Drive Slideshow API is running!');
 });
 

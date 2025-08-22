@@ -1,11 +1,11 @@
-import { Router, Request, Response, NextFunction } from 'express';
+import { Router } from 'express';
 import { getDriveClient, getFolders, getImagesFromFolders, getImageFile } from '../services/google';
 import { GaxiosError } from 'gaxios';
 
 const router = Router();
 
 // Middleware to check for session and accountId
-const checkAuth = (req: Request, res: Response, next: NextFunction) => {
+const checkAuth = (req, res, next) => {
   const accountId = req.query.accountId as string;
   if (!req.session.tokens || !accountId || !req.session.tokens[accountId]) {
     return res.status(401).json({ error: 'Unauthorized: No session or account not connected.' });
@@ -13,7 +13,7 @@ const checkAuth = (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
-router.get('/folders', checkAuth, async (req: Request, res: Response) => {
+router.get('/folders', checkAuth, async (req, res) => {
   const accountId = req.query.accountId as string;
   try {
     const drive = getDriveClient(req.session, accountId);
@@ -25,7 +25,7 @@ router.get('/folders', checkAuth, async (req: Request, res: Response) => {
   }
 });
 
-router.get('/images', checkAuth, async (req: Request, res: Response) => {
+router.get('/images', checkAuth, async (req, res) => {
   const folderIds = req.query.folderIds as string;
   const accountId = req.query.accountId as string;
 
@@ -43,7 +43,7 @@ router.get('/images', checkAuth, async (req: Request, res: Response) => {
   }
 });
 
-router.get('/image/:fileId', checkAuth, async (req: Request, res: Response) => {
+router.get('/image/:fileId', checkAuth, async (req, res) => {
     const { fileId } = req.params;
     const accountId = req.query.accountId as string;
 
