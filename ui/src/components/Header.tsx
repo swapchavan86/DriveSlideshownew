@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/lib/theme";
-import { Moon, Sun, Music, MusicOff, HelpCircle, X } from "lucide-react";
+import { Moon, Sun, Music, VolumeX, HelpCircle, X } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SlideshowEffect } from "./SlideshowPlayer";
 import HowToUseDialog from "./HowToUseDialog";
@@ -47,7 +47,7 @@ const Header = ({
                         </Select>
 
                         <Button variant="ghost" size="icon" onClick={onMusicToggle}>
-                            {musicEnabled ? <Music className="h-5 w-5" /> : <MusicOff className="h-5 w-5" />}
+                            {musicEnabled ? <Music className="h-5 w-5" /> : <VolumeX className="h-5 w-5" />}
                         </Button>
                         <Button variant="destructive" size="icon" onClick={onExitSlideshow}>
                              <X className="h-5 w-5" />

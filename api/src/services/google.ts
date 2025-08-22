@@ -1,5 +1,5 @@
 import { google, Auth, drive_v3 } from 'googleapis';
-import { Session } from 'express-session';
+import { Session, SessionData } from 'express-session';
 
 // Extend the express-session type
 declare module 'express-session' {
@@ -33,14 +33,14 @@ export const getGoogleAuthUrl = (): string => {
   });
 };
 
-export const setGoogleAuthCredentials = (session: Session, accountId: string, tokens: Auth.Credentials) => {
+export const setGoogleAuthCredentials = (session: Session & Partial<SessionData>, accountId: string, tokens: Auth.Credentials) => {
   if (!session.tokens) {
     session.tokens = {};
   }
   session.tokens[accountId] = tokens;
 };
 
-export const getDriveClient = (session: Session, accountId: string): drive_v3.Drive => {
+export const getDriveClient = (session: Session & Partial<SessionData>, accountId: string): drive_v3.Drive => {
     const client = getOAuthClient();
     if (session.tokens && session.tokens[accountId]) {
         client.setCredentials(session.tokens[accountId]);
@@ -49,7 +49,7 @@ export const getDriveClient = (session: Session, accountId: string): drive_v3.Dr
     throw new Error('User not authenticated for the given account ID');
 };
 
-export const clearAccount = (session: Session, accountId: string) => {
+export const clearAccount = (session: Session & Partial<SessionData>, accountId: string) => {
     if (session.tokens) delete session.tokens[accountId];
     if (session.accountIds) {
         session.accountIds = session.accountIds.filter(id => id !== accountId);

@@ -14,7 +14,7 @@ import { ReactNode } from "react";
 import { ConnectIcon, SelectFolderIcon, PlayIcon } from './Icons';
 
 interface HowToUseDialogProps {
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 const InstructionStep = ({ icon, title, description }: { icon: ReactNode, title: string, description: string }) => (
